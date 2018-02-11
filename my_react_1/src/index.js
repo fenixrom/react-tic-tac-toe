@@ -88,8 +88,6 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
 
-    console.log('add to develop branch');
-
     const moves = history.map((step, move) => {
       const desc = move ?
         'go to move #' + move :
