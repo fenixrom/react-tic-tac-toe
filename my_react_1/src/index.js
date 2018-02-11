@@ -59,6 +59,7 @@ class Game extends React.Component {
 
   handleClick(i) {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    console.log('replace previous log0');
     const current = history[history.length -1];
     const squares = current.squares.slice();
     console.log('test')
