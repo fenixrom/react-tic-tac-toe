@@ -10,6 +10,20 @@ function Square(props) {
   )
 }
 
+function Row(props) {
+  return (
+    <div className="board-row" key={props.value.rowId}>
+      {props.value.squares.map((square) => 
+        <Square 
+          key={props.value.rowId + '' +  square}
+          value={props.value.rowId + ',' + square}
+          onClick={(i, j) => props.onClick(props.value.rowId, square)}
+        />
+      )}
+    </div>
+  )
+}
+
 class Board extends React.Component {
 
   renderSquare(i) {
@@ -21,24 +35,41 @@ class Board extends React.Component {
     );
   }
 
+  renderRow(rowData) {
+    return (
+      <div className="gameRows">
+        {rowData.map( (gameRow) =>
+          <Row key={gameRow.rowId}
+                  value={gameRow}
+            onClick={this.props.onClick}></Row>
+
+        )}
+      </div>
+    )
+  }
+
   render() {
     return (
       <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
+        <div>
+          <div className="board-row">
+            {this.renderSquare(0)}
+            {this.renderSquare(1)}
+            {this.renderSquare(2)}
+          </div>
+          <div className="board-row">
+            {this.renderSquare(3)}
+            {this.renderSquare(4)}
+            {this.renderSquare(5)}
+          </div>
+          <div className="board-row">
+            {this.renderSquare(6)}
+            {this.renderSquare(7)}
+            {this.renderSquare(8)}
+          </div>
         </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+
+        {this.renderRow(this.props.gameMap)}
       </div>
     );
   }
@@ -53,16 +84,30 @@ class Game extends React.Component {
         squares: Array(9).fill(null)
       }],
       xIsNext: true,
-      stepNumber: 0
+      stepNumber: 0,
+      gameMap: [
+        {
+          rowId: 1,
+          squares: [1, 2, 3]
+        },
+        {
+          rowId: 2,
+          squares: [1, 2, 3]
+        },
+        {
+          rowId: 3,
+          squares: [1, 2, 3]
+        }
+      ]
     }
   }
 
-  handleClick(i) {
+  handleClick(i, j) {
+    console.log(i,j)
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     console.log('replace previous log0');
     const current = history[history.length -1];
     const squares = current.squares.slice();
-    console.log('test')
     if (calculateWinner(squares) || squares[i]) {
       return false;
     }
@@ -85,8 +130,6 @@ class Game extends React.Component {
   }
 
   render() {
-    console.log('test debug')
-    console.log('render')
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
@@ -116,7 +159,8 @@ class Game extends React.Component {
         <div className="game-board">
           <Board 
             squares={current.squares}
-            onClick={(i) => this.handleClick(i)}
+            gameMap={this.state.gameMap}
+            onClick={(i, j) => this.handleClick(i, j)}
           />
         </div>
         <div className="game-info">
